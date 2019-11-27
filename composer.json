@@ -1,0 +1,37 @@
+{
+    "name": "lenderspender/laravel-state-transition-workflow",
+    "description": "State transition workflow",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bert van Hoekelen",
+            "email": "bert@magwel.nl"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "LenderSpender\\StateTransitionWorkflow\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "LenderSpender\\StateTransitionWorkflow\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": "^7.3.0",
+        "spatie/laravel-queueable-action": "^2.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0",
+        "orchestra/testbench": "^4.4",
+        "phpstan/phpstan": "^0.11.19",
+        "lenderspender/laravel-enums": "^0.3.0",
+        "friendsofphp/php-cs-fixer": "^2.16"
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "analyse": "vendor/bin/phpstan analyse src tests"
+    }
+}
