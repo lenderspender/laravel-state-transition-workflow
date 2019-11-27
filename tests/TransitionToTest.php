@@ -17,7 +17,7 @@ class TransitionToTest extends TestCase
     {
         $model = new TransitionableModel(['status' => FooStates::FIRST()]);
 
-        $model->transitionTo(FooStates::SECOND());
+        $model->transitionStateTo(FooStates::SECOND());
 
         self::assertEquals(FooStates::SECOND(), $model->status);
     }
@@ -26,9 +26,21 @@ class TransitionToTest extends TestCase
     {
         $model = new TransitionableModel(['status' => FooStates::FIRST()]);
 
-        $model->transitionTo(FooStates::SECOND());
+        $model->transitionStateTo(FooStates::SECOND());
 
         self::assertEquals(FooStates::SECOND(), $model->status);
+    }
+
+    public function test_model_can_be_transitioned_from_multiple(): void
+    {
+        $model1 = new TransitionableModel(['status' => FooStates::MULTIPLE1()]);
+        $model2 = new TransitionableModel(['status' => FooStates::MULTIPLE2()]);
+
+        $model1->transitionStateTo(FooStates::FIRST());
+        $model2->transitionStateTo(FooStates::SECOND());
+
+        self::assertEquals(FooStates::FIRST(), $model1->status);
+        self::assertEquals(FooStates::SECOND(), $model2->status);
     }
 
     public function test_model_cannot_be_transitioned(): void
@@ -36,7 +48,7 @@ class TransitionToTest extends TestCase
         $model = new TransitionableModel(['status' => FooStates::SECOND()]);
 
         try {
-            $model->transitionTo(FooStates::SECOND());
+            $model->transitionStateTo(FooStates::SECOND());
         } catch (TransitionNotAllowedException $e) {
             self::assertSame('Transition second->second is not allowed on ' . TransitionableModel::class, $e->getMessage());
 
@@ -50,7 +62,7 @@ class TransitionToTest extends TestCase
     {
         $model = new TransitionableModel(['status' => FooStates::FIRST()]);
 
-        $model->transitionTo(FooStates::WITH_CUSTOM_WORKFLOW_CLASS());
+        $model->transitionStateTo(FooStates::WITH_CUSTOM_WORKFLOW_CLASS());
 
         self::assertTrue($model->isTransitionedByCustomWorkflow);
         self::assertEquals(FooStates::WITH_CUSTOM_WORKFLOW_CLASS(), $model->status);
@@ -61,7 +73,7 @@ class TransitionToTest extends TestCase
         $model = new TransitionableModel(['status' => FooStates::FIRST()]);
 
         try {
-            $model->transitionTo(FooStates::WITH_DENIED_WORKFLOW_CLASS());
+            $model->transitionStateTo(FooStates::WITH_DENIED_WORKFLOW_CLASS());
         } catch (TransitionNotAllowedException $e) {
             self::assertSame('Transition first->with_denied_workflow_class is not allowed on ' . TransitionableModel::class, $e->getMessage());
 
@@ -76,7 +88,7 @@ class TransitionToTest extends TestCase
         Queue::fake();
         $model = new TransitionableModel(['status' => FooStates::FIRST()]);
 
-        $model->transitionTo(FooStates::WITH_CUSTOM_QUEUED_WORKFLOW_CLASS());
+        $model->transitionStateTo(FooStates::WITH_CUSTOM_QUEUED_WORKFLOW_CLASS());
 
         Queue::assertPushed(ActionJob::class, function (ActionJob $actionJob) {
             self::assertSame(CustomQueuedWorkflow::class, $actionJob->displayName());
@@ -93,8 +105,8 @@ class TransitionToTest extends TestCase
         Queue::fake();
         $model = new TransitionableModel(['status' => FooStates::FIRST()]);
 
-        $model->transitionTo(FooStates::WITH_CUSTOM_QUEUED_WORKFLOW_CLASS());
-        $model->transitionTo(FooStates::WITH_CUSTOM_QUEUED_WORKFLOW_CLASS());
+        $model->transitionStateTo(FooStates::WITH_CUSTOM_QUEUED_WORKFLOW_CLASS());
+        $model->transitionStateTo(FooStates::WITH_CUSTOM_QUEUED_WORKFLOW_CLASS());
 
         Queue::assertPushed(ActionJob::class, function (ActionJob $actionJob) {
             try {

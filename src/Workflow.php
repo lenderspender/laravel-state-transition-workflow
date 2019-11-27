@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace LenderSpender\StateTransitionWorkflow;
 
+use Illuminate\Database\Eloquent\Model;
 use Spatie\QueueableAction\QueueableAction;
 
-abstract class BaseWorkflow
+abstract class Workflow
 {
     use QueueableAction;
 
@@ -15,7 +16,7 @@ abstract class BaseWorkflow
         return true;
     }
 
-    public function execute(Transition $transition): void
+    public function execute(Model $model, Transition $transition): void
     {
         $transition->execute();
     }

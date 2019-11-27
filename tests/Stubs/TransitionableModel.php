@@ -28,7 +28,8 @@ class TransitionableModel extends Model
     {
         $this->addState('status')
             ->allowTransition(FooStates::FIRST(), FooStates::SECOND())
-            ->allowTransition(FooStates::SECOND(), [FooStates::FIRST(), FooStates::FIRST()])
+            ->allowTransition(FooStates::SECOND(), [FooStates::FIRST(), FooStates::WITH_CUSTOM_WORKFLOW_CLASS()])
+            ->allowTransition([FooStates::MULTIPLE1(), FooStates::MULTIPLE2()], [FooStates::FIRST(), FooStates::SECOND()])
             ->allowTransition(FooStates::FIRST(), FooStates::WITH_CUSTOM_WORKFLOW_CLASS(), CustomWorkflow::class)
             ->allowTransition(FooStates::FIRST(), FooStates::WITH_CUSTOM_QUEUED_WORKFLOW_CLASS(), CustomQueuedWorkflow::class)
             ->allowTransition(FooStates::FIRST(), FooStates::WITH_DENIED_WORKFLOW_CLASS(), DeniedWorkflow::class);

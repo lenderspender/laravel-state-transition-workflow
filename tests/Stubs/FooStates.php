@@ -14,6 +14,8 @@ use LenderSpender\StateTransitionWorkflow\TransitionState;
  * @method static self WITH_CUSTOM_WORKFLOW_CLASS()
  * @method static self WITH_CUSTOM_QUEUED_WORKFLOW_CLASS()
  * @method static self WITH_DENIED_WORKFLOW_CLASS()
+ * @method static self MULTIPLE1()
+ * @method static self MULTIPLE2()
  */
 class FooStates extends Enum implements TransitionState
 {
@@ -23,4 +25,6 @@ class FooStates extends Enum implements TransitionState
     private const WITH_CUSTOM_WORKFLOW_CLASS = 'with_custom_workflow_class';
     private const WITH_CUSTOM_QUEUED_WORKFLOW_CLASS = 'with_custom_queued_workflow_class';
     private const WITH_DENIED_WORKFLOW_CLASS = 'with_denied_workflow_class';
+    private const MULTIPLE1 = 'multiple1';
+    private const MULTIPLE2 = 'multiple2';
 }

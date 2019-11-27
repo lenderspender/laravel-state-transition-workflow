@@ -7,14 +7,8 @@ namespace LenderSpender\StateTransitionWorkflow;
 use Illuminate\Database\Eloquent\Model;
 use LenderSpender\StateTransitionWorkflow\Exceptions\TransitionNotAllowedException;
 
-/**
- * @internal
- */
 class Transition
 {
-    /** @var \Illuminate\Database\Eloquent\Model */
-    public $model;
-
     /** @var string */
     public $field;
 
@@ -23,6 +17,9 @@ class Transition
 
     /** @var \LenderSpender\StateTransitionWorkflow\TransitionState */
     public $to;
+
+    /** @var \Illuminate\Database\Eloquent\Model */
+    private $model;
 
     /** @var bool */
     private $isTransitioned = false;
@@ -52,12 +49,12 @@ class Transition
             return;
         }
 
-        throw new TransitionNotAllowedException($this);
+        throw new TransitionNotAllowedException($this->model, $this);
     }
 
     public function canBeTransitioned(): bool
     {
-        return $this->model->{$this->field} === $this->from && ! $this->isTransitioned;
+        return $this->model->{$this->field} == $this->from && ! $this->isTransitioned;
     }
 
     public function __toString(): string

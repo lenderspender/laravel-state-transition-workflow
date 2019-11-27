@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace LenderSpender\StateTransitionWorkflow\Tests\Stubs;
 
-use LenderSpender\StateTransitionWorkflow\BaseWorkflow;
+use Illuminate\Database\Eloquent\Model;
 use LenderSpender\StateTransitionWorkflow\Transition;
+use LenderSpender\StateTransitionWorkflow\Workflow;
 
-class CustomWorkflow extends BaseWorkflow
+class CustomWorkflow extends Workflow
 {
-    public function execute(Transition $transition): void
+    public function execute(Model $model, Transition $transition): void
     {
-        $transition->model->isTransitionedByCustomWorkflow = true;
+        $model->isTransitionedByCustomWorkflow = true;
     }
 }

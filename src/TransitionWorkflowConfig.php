@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace LenderSpender\StateTransitionWorkflow;
 
+/**
+ * @internal
+ */
 class TransitionWorkflowConfig
 {
     /** @var string */
@@ -18,39 +21,46 @@ class TransitionWorkflowConfig
     }
 
     /**
-     * @param \LenderSpender\StateTransitionWorkflow\TransitionState|\LenderSpender\StateTransitionWorkflow\TransitionState[] $to
+     * @param \LenderSpender\StateTransitionWorkflow\TransitionState|\LenderSpender\StateTransitionWorkflow\TransitionState[] $froms
+     * @param \LenderSpender\StateTransitionWorkflow\TransitionState|\LenderSpender\StateTransitionWorkflow\TransitionState[] $tos
      *
      * @return \LenderSpender\StateTransitionWorkflow\TransitionWorkflowConfig
      */
-    public function allowTransition(TransitionState $from, $to, string $workflowClass = null): self
+    public function allowTransition($froms, $tos, string $workflowClass = null): self
     {
-        if (is_array($to)) {
-            foreach ($to as $toTransition) {
-                $this->allowTransition($from, $toTransition, $workflowClass);
-            }
-
-            return $this;
-        }
+        $tos = is_array($tos) ? $tos : [$tos];
+        $froms = is_array($froms) ? $froms : [$froms];
 
         if (! $workflowClass) {
-            $workflowClass = new class() extends BaseWorkflow {
+            $workflowClass = new class() extends Workflow {
             };
         }
 
-        $transitionKey = Transition::getTransitionKey($from, $to);
-        $this->allowedTransitions[$transitionKey] = $workflowClass;
+        collect($froms)->each(function (TransitionState $from) use ($tos, $workflowClass) {
+            collect($tos)->each(function (TransitionState $transition) use ($from, $workflowClass) {
+                $this->allowedTransitions[(string) $from][(string) $transition] = [
+                    'workflow' => $workflowClass,
+                    'to' => $transition,
+                ];
+            });
+        });
 
         return $this;
     }
 
-    public function getWorkflow(Transition $transition): ?BaseWorkflow
+    public function getWorkflow(Transition $transition): ?Workflow
     {
-        $transition = $this->allowedTransitions[(string) $transition] ?? null;
+        $workflow = $this->getAllowedTransitions($transition->from)[(string) $transition->to]['workflow'] ?? null;
 
-        if (is_string($transition)) {
-            return new $transition();
+        if (is_string($workflow)) {
+            return app($workflow);
         }
 
-        return $transition;
+        return $workflow;
+    }
+
+    public function getAllowedTransitions(TransitionState $from): array
+    {
+        return $this->allowedTransitions[(string) $from] ?? [];
     }
 }

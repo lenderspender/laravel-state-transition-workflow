@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace LenderSpender\StateTransitionWorkflow\Tests\Stubs;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
-use LenderSpender\StateTransitionWorkflow\BaseWorkflow;
+use Illuminate\Database\Eloquent\Model;
 use LenderSpender\StateTransitionWorkflow\Transition;
+use LenderSpender\StateTransitionWorkflow\Workflow;
 
-class CustomQueuedWorkflow extends BaseWorkflow implements ShouldQueue
+class CustomQueuedWorkflow extends Workflow implements ShouldQueue
 {
-    public function execute(Transition $transition): void
+    public function execute(Model $model, Transition $transition): void
     {
-        ++$transition->model->timesTransitionedByQueuedWorkflow;
+        ++$model->timesTransitionedByQueuedWorkflow;
         $transition->execute();
     }
 }

@@ -6,30 +6,35 @@ namespace LenderSpender\StateTransitionWorkflow;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use LenderSpender\StateTransitionWorkflow\Exceptions\TransitionNotAllowedException;
+use ReflectionClass;
 
 trait HasStateTransitions
 {
-    /** @var \LenderSpender\StateTransitionWorkflow\TransitionWorkflowConfig[]|null */
-    protected static $stateFields = null;
+    /** @var \LenderSpender\StateTransitionWorkflow\TransitionWorkflowConfig[] */
+    protected static $stateFields = [];
 
-    public function transitionTo(TransitionState $to, string $field = null): self
+    public static function bootHasStateTransitions(): void
     {
-        $this->registerStateTransitions();
+        $class = (new ReflectionClass(static::class))->newInstanceWithoutConstructor();
+        $class->registerStateTransitions();
+    }
 
-        /** @var \LenderSpender\StateTransitionWorkflow\TransitionWorkflowConfig $stateConfig */
-        $stateConfig = static::$stateFields[$field] ?? array_values(static::$stateFields)[0];
+    public function transitionStateTo(TransitionState $to, string $field = null): self
+    {
+        $transitionWorkflowConfig = $this->getTransitionWorkflowConfig($field);
 
-        $transition = new Transition($this, $stateConfig->field, $this->{$stateConfig->field}, $to);
-        $workflow = $stateConfig->getWorkflow($transition);
+        $field = $transitionWorkflowConfig->field;
+        $transition = new Transition($this, $field, $this->{$field}, $to);
+        $workflow = $transitionWorkflowConfig->getWorkflow($transition);
 
         if (! $workflow || ! $workflow->isAllowed($transition)) {
-            throw new TransitionNotAllowedException($transition);
+            throw new TransitionNotAllowedException($this, $transition);
         }
 
         if ($workflow instanceof ShouldQueue) {
-            $workflow->onQueue()->execute($transition);
+            $workflow->onQueue()->execute($this, $transition);
         } else {
-            $workflow->execute($transition);
+            $workflow->execute($this, $transition);
 
             if ($transition->canBeTransitioned()) {
                 $transition->execute();
@@ -37,6 +42,17 @@ trait HasStateTransitions
         }
 
         return $this;
+    }
+
+    public function getAvailableStateTransitions(?string $field = null): array
+    {
+        $transitionWorkflowConfig = $this->getTransitionWorkflowConfig($field);
+
+        $currentState = $this->{$transitionWorkflowConfig->field};
+
+        return array_values(array_map(function (array $transitions) {
+            return $transitions['to'];
+        }, $transitionWorkflowConfig->getAllowedTransitions($currentState)));
     }
 
     protected function addState(string $field): TransitionWorkflowConfig
@@ -49,4 +65,9 @@ trait HasStateTransitions
     }
 
     abstract protected function registerStateTransitions(): void;
+
+    private function getTransitionWorkflowConfig(?string $field): TransitionWorkflowConfig
+    {
+        return static::$stateFields[$field] ?? array_values(static::$stateFields)[0];
+    }
 }
