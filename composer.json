@@ -21,6 +21,8 @@
     },
     "require": {
         "php": "^7.3.0",
+        "illuminate/contracts": "^6.0",
+        "illuminate/database": "^6.0",
         "spatie/laravel-queueable-action": "^2.3"
     },
     "require-dev": {
@@ -29,6 +31,9 @@
         "phpstan/phpstan": "^0.11.19",
         "lenderspender/laravel-enums": "^0.3.0",
         "friendsofphp/php-cs-fixer": "^2.16"
+    },
+    "config": {
+        "sort-packages": true
     },
     "scripts": {
         "test": "vendor/bin/phpunit",
