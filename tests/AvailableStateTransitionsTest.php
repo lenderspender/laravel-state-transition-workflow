@@ -11,7 +11,8 @@ class AvailableStateTransitionsTest extends TestCase
 {
     public function test_can_get_available_state_transitions(): void
     {
-        $model = new TransitionableModel(['status' => FooStates::SECOND()]);
+        $model = new TransitionableModel();
+        $model->status = FooStates::SECOND();
 
         $availableStates = $model->getAvailableStateTransitions();
 

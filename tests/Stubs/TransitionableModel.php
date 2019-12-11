@@ -14,14 +14,13 @@ class TransitionableModel extends Model
     public $isTransitionedByCustomWorkflow = false;
     public $timesTransitionedByQueuedWorkflow = 0;
 
-    protected $guarded = [];
     protected $enums = [
         'status' => FooStates::class,
     ];
 
-    public function update(array $attributes = [], array $options = [])
+    public function save(array $options = [])
     {
-        $this->fill($attributes);
+        return true;
     }
 
     protected function registerStateTransitions(): void
