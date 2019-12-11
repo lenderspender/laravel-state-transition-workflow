@@ -45,9 +45,8 @@ class Transition
     public function execute(): void
     {
         if ($this->canBeTransitioned()) {
-            $this->model->update([
-                $this->field => $this->to,
-            ]);
+            $this->model->{$this->field} = $this->to;
+            $this->model->save();
 
             $this->isTransitioned = true;
 

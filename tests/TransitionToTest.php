@@ -15,7 +15,8 @@ class TransitionToTest extends TestCase
 {
     public function test_model_can_be_transitioned(): void
     {
-        $model = new TransitionableModel(['status' => FooStates::FIRST()]);
+        $model = new TransitionableModel();
+        $model->status = FooStates::FIRST();
 
         $model->transitionStateTo(FooStates::SECOND());
 
@@ -24,7 +25,8 @@ class TransitionToTest extends TestCase
 
     public function test_model_can_be_transitioned_to_one_of_the_tos(): void
     {
-        $model = new TransitionableModel(['status' => FooStates::FIRST()]);
+        $model = new TransitionableModel();
+        $model->status = FooStates::FIRST();
 
         $model->transitionStateTo(FooStates::SECOND());
 
@@ -33,8 +35,11 @@ class TransitionToTest extends TestCase
 
     public function test_model_can_be_transitioned_from_multiple(): void
     {
-        $model1 = new TransitionableModel(['status' => FooStates::MULTIPLE1()]);
-        $model2 = new TransitionableModel(['status' => FooStates::MULTIPLE2()]);
+        $model1 = new TransitionableModel();
+        $model1->status = FooStates::MULTIPLE1();
+
+        $model2 = new TransitionableModel();
+        $model2->status = FooStates::MULTIPLE1();
 
         $model1->transitionStateTo(FooStates::FIRST());
         $model2->transitionStateTo(FooStates::SECOND());
@@ -45,7 +50,8 @@ class TransitionToTest extends TestCase
 
     public function test_model_cannot_be_transitioned(): void
     {
-        $model = new TransitionableModel(['status' => FooStates::SECOND()]);
+        $model = new TransitionableModel();
+        $model->status = FooStates::SECOND();
 
         try {
             $model->transitionStateTo(FooStates::SECOND());
@@ -60,7 +66,8 @@ class TransitionToTest extends TestCase
 
     public function test_custom_workflow_is_executed(): void
     {
-        $model = new TransitionableModel(['status' => FooStates::FIRST()]);
+        $model = new TransitionableModel();
+        $model->status = FooStates::FIRST();
 
         $model->transitionStateTo(FooStates::WITH_CUSTOM_WORKFLOW_CLASS());
 
@@ -70,7 +77,8 @@ class TransitionToTest extends TestCase
 
     public function test_model_cannot_be_transition_based_on_workflow_class(): void
     {
-        $model = new TransitionableModel(['status' => FooStates::FIRST()]);
+        $model = new TransitionableModel();
+        $model->status = FooStates::FIRST();
 
         try {
             $model->transitionStateTo(FooStates::WITH_DENIED_WORKFLOW_CLASS());
@@ -86,7 +94,8 @@ class TransitionToTest extends TestCase
     public function test_workflow_can_be_queued(): void
     {
         Queue::fake();
-        $model = new TransitionableModel(['status' => FooStates::FIRST()]);
+        $model = new TransitionableModel();
+        $model->status = FooStates::FIRST();
 
         $model->transitionStateTo(FooStates::WITH_CUSTOM_QUEUED_WORKFLOW_CLASS());
 
@@ -103,7 +112,8 @@ class TransitionToTest extends TestCase
     public function test_transition_can_only_be_executed_once(): void
     {
         Queue::fake();
-        $model = new TransitionableModel(['status' => FooStates::FIRST()]);
+        $model = new TransitionableModel();
+        $model->status = FooStates::FIRST();
 
         $model->transitionStateTo(FooStates::WITH_CUSTOM_QUEUED_WORKFLOW_CLASS());
         $model->transitionStateTo(FooStates::WITH_CUSTOM_QUEUED_WORKFLOW_CLASS());
