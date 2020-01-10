@@ -7,18 +7,39 @@ namespace LenderSpender\StateTransitionWorkflow\Tests\Stubs;
 use Illuminate\Database\Eloquent\Model;
 use LenderSpender\StateTransitionWorkflow\HasStateTransitions;
 
+/**
+ * @property \LenderSpender\StateTransitionWorkflow\Tests\Stubs\FooStates $status
+ */
 class TransitionableModel extends Model
 {
     use HasStateTransitions;
 
+    /** @var bool */
     public $isTransitionedByCustomWorkflow = false;
+
+    /** @var int */
     public $timesTransitionedByQueuedWorkflow = 0;
 
+    /** @var array<string, class-string<\LenderSpender\LaravelEnums\Enum>> */
     protected $enums = [
         'status' => FooStates::class,
     ];
 
-    public function save(array $options = [])
+    /**
+     * @param array<string, mixed> $attributes
+     * @param array<string, mixed> $options
+     */
+    public function update(array $attributes = [], array $options = []): bool
+    {
+        $this->fill($attributes);
+
+        return true;
+    }
+
+    /**
+     * @param array<string, mixed> $options
+     */
+    public function save(array $options = []): bool
     {
         return true;
     }

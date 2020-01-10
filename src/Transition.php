@@ -32,11 +32,6 @@ class Transition
         $this->to = $to;
     }
 
-    public function __toString(): string
-    {
-        return self::getTransitionKey($this->from, $this->to);
-    }
-
     public static function getTransitionKey(TransitionState $from, TransitionState $to): string
     {
         return "{$from}->{$to}";
@@ -59,5 +54,10 @@ class Transition
     public function canBeTransitioned(): bool
     {
         return $this->model->{$this->field} == $this->from && ! $this->isTransitioned;
+    }
+
+    public function __toString(): string
+    {
+        return self::getTransitionKey($this->from, $this->to);
     }
 }

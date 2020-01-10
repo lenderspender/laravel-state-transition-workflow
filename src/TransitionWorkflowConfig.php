@@ -12,7 +12,7 @@ class TransitionWorkflowConfig
     /** @var string */
     public $field;
 
-    /** @var array */
+    /** @var array<string, array<string, array>> */
     private $allowedTransitions = [];
 
     public function __construct(string $field)
@@ -23,6 +23,7 @@ class TransitionWorkflowConfig
     /**
      * @param \LenderSpender\StateTransitionWorkflow\TransitionState|\LenderSpender\StateTransitionWorkflow\TransitionState[] $froms
      * @param \LenderSpender\StateTransitionWorkflow\TransitionState|\LenderSpender\StateTransitionWorkflow\TransitionState[] $tos
+     * @param null|class-string<\LenderSpender\StateTransitionWorkflow\Workflow>                                              $workflowClass
      *
      * @return \LenderSpender\StateTransitionWorkflow\TransitionWorkflowConfig
      */
@@ -59,6 +60,9 @@ class TransitionWorkflowConfig
         return $workflow;
     }
 
+    /**
+     * @return array<string, array>
+     */
     public function getAllowedTransitions(TransitionState $from): array
     {
         return $this->allowedTransitions[(string) $from] ?? [];
