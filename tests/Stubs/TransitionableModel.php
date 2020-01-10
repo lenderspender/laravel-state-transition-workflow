@@ -20,6 +20,7 @@ class TransitionableModel extends Model
     /** @var int */
     public $timesTransitionedByQueuedWorkflow = 0;
 
+    /** @var array<string, class-string<\LenderSpender\LaravelEnums\Enum>> */
     protected $enums = [
         'status' => FooStates::class,
     ];
@@ -31,12 +32,14 @@ class TransitionableModel extends Model
     public function update(array $attributes = [], array $options = []): bool
     {
         $this->fill($attributes);
+
+        return true;
     }
-  
+
     /**
      * @param array<string, mixed> $options
      */
-    public function save(array $options = [])
+    public function save(array $options = []): bool
     {
         return true;
     }
