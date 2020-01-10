@@ -21,7 +21,7 @@ class Transaction extends Model
 {
     use HasStateTransitions;
 
-     protected function registerStateTransitions(): void
+    protected function registerStateTransitions(): void
     {
         $this->addState('status')
             ->allowTransition(TransactionState::CREATED(), TransactionState::SUCCESS(), TransactionSuccessfullWorkflow::class)
