@@ -103,6 +103,7 @@ The package provides a `HasStateTransitions` trait which you can use in any mode
 To setup states for the `$status` attribute you should add the `HasStateTransitions` trait to the model and implement the `registerStateTransitions` method.  
 
 ```php
+use Illuminate\Database\Eloquent\Model;
 use LenderSpender\StateTransitionWorkflow\HasStateTransitions;
 
 /**
@@ -112,7 +113,7 @@ class Transaction extends Model
 {
     use HasStateTransitions;
 
-     protected function registerStateTransitions(): void
+    protected function registerStateTransitions(): void
     {
         $this->addState('status');
     }
@@ -132,10 +133,10 @@ class Transaction extends Model
 {
     use HasStateTransitions;
 
-     protected function registerStateTransitions(): void
+    protected function registerStateTransitions(): void
     {
         $this->addState('status')
-                ->allowTransitions(State:FROM(), State::TO());
+            ->allowTransitions(State::FROM(), State::TO());
     }
 }
 ```
@@ -143,14 +144,17 @@ class Transaction extends Model
 Allow transitions from `State::CREATED()` to `State::FAILED()` and `State::SUCCESS()`
 
 ```php
+use Illuminate\Database\Eloquent\Model;
+use LenderSpender\StateTransitionWorkflow\HasStateTransitions;
+
 class Transaction extends Model
 {
     use HasStateTransitions;
 
-     protected function registerStateTransitions(): void
+    protected function registerStateTransitions(): void
     {
         $this->addState('status')
-                ->allowTransitions(State::CREATED(), [State::FAILED(), State::SUCCESS());
+            ->allowTransitions(State::CREATED(), [State::FAILED(), State::SUCCESS());
     }
 }        
 ```
@@ -158,14 +162,16 @@ class Transaction extends Model
 Allow transitions from `State::CREATED()` and `State::UPDATED()` to `State::FAILED()` and `State::SUCCESS()`
 
 ```php
+use LenderSpender\StateTransitionWorkflow\HasStateTransitions;
+
 class Transaction extends Model
 {
     use HasStateTransitions;
 
-     protected function registerStateTransitions(): void
+    protected function registerStateTransitions(): void
     {
         $this->addState('status')
-                ->allowTransitions([State::CREATED(), State::UPDATED()], [State::FAILED(), State::SUCCESS()]);
+            ->allowTransitions([State::CREATED(), State::UPDATED()], [State::FAILED(), State::SUCCESS()]);
     }
 }
 ```
@@ -253,7 +259,7 @@ When you want to perform some heavy actions before or after the transition you c
 
 
 ```php
-use Illuminate\Contracts\Queue;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use LenderSpender\StateTransitionWorkflow\Workflow;
 
 class PaidWorkflow extends Workflow implements ShouldQueue
@@ -284,10 +290,10 @@ class Transaction extends Model
 {
     use HasStateTransitions;
 
-     protected function registerStateTransitions(): void
+    protected function registerStateTransitions(): void
     {
         $this->addState('status')
-                ->allowTransitions(State::CREATED(), State::SUCCESS(), PaidWorkflow::class);
+            ->allowTransitions(State::CREATED(), State::SUCCESS(), PaidWorkflow::class);
     }
 }
 ```
