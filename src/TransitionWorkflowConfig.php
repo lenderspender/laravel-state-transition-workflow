@@ -21,16 +21,16 @@ class TransitionWorkflowConfig
     }
 
     /**
-     * @param \LenderSpender\StateTransitionWorkflow\TransitionState|\LenderSpender\StateTransitionWorkflow\TransitionState[] $froms
-     * @param \LenderSpender\StateTransitionWorkflow\TransitionState|\LenderSpender\StateTransitionWorkflow\TransitionState[] $tos
-     * @param null|class-string<\LenderSpender\StateTransitionWorkflow\Workflow>                                              $workflowClass
+     * @param \LenderSpender\StateTransitionWorkflow\TransitionState|iterable<\LenderSpender\StateTransitionWorkflow\TransitionState> $froms
+     * @param \LenderSpender\StateTransitionWorkflow\TransitionState|iterable<\LenderSpender\StateTransitionWorkflow\TransitionState> $tos
+     * @param null|class-string<\LenderSpender\StateTransitionWorkflow\Workflow>                                                      $workflowClass
      *
      * @return \LenderSpender\StateTransitionWorkflow\TransitionWorkflowConfig
      */
     public function allowTransition($froms, $tos, string $workflowClass = null): self
     {
-        $tos = is_array($tos) ? $tos : [$tos];
-        $froms = is_array($froms) ? $froms : [$froms];
+        $tos = is_iterable($tos) ? $tos : [$tos];
+        $froms = is_iterable($froms) ? $froms : [$froms];
 
         if (! $workflowClass) {
             $workflowClass = new class() extends Workflow {
