@@ -1,0 +1,24 @@
+name: Format (PHP)
+
+on:
+  pull_request:
+    paths:
+      - '**.php'
+
+jobs:
+  php-cs-fixer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.LS_BUILDER_PA_GITHUB_TOKEN }}
+
+      - name: Run php-cs-fixer
+        uses: docker://oskarstark/php-cs-fixer-ga:2.16.1.1
+
+      - uses: stefanzweifel/git-auto-commit-action@v2.5.0
+        with:
+          commit_message: Apply php-cs-fixer changes
+          branch: ${{ github.head_ref }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.LS_BUILDER_PA_GITHUB_TOKEN }}
