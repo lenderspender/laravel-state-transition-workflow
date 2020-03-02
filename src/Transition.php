@@ -9,8 +9,7 @@ use LenderSpender\StateTransitionWorkflow\Exceptions\TransitionNotAllowedExcepti
 
 class Transition
 {
-    /** @var string */
-    public $field;
+    public string $field;
 
     /** @var \LenderSpender\StateTransitionWorkflow\TransitionState */
     public $from;
