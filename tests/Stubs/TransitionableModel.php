@@ -14,11 +14,8 @@ class TransitionableModel extends Model
 {
     use HasStateTransitions;
 
-    /** @var bool */
-    public $isTransitionedByCustomWorkflow = false;
-
-    /** @var int */
-    public $timesTransitionedByQueuedWorkflow = 0;
+    public bool $isTransitionedByCustomWorkflow = false;
+    public int $timesTransitionedByQueuedWorkflow = 0;
 
     /** @var array<string, class-string<\LenderSpender\LaravelEnums\Enum>> */
     protected $enums = [
