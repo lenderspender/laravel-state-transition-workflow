@@ -9,20 +9,11 @@ use LenderSpender\StateTransitionWorkflow\Exceptions\TransitionNotAllowedExcepti
 
 class Transition
 {
-    /** @var string */
-    public $field;
-
-    /** @var \LenderSpender\StateTransitionWorkflow\TransitionState */
-    public $from;
-
-    /** @var \LenderSpender\StateTransitionWorkflow\TransitionState */
-    public $to;
-
-    /** @var \Illuminate\Database\Eloquent\Model */
-    private $model;
-
-    /** @var bool */
-    private $isTransitioned = false;
+    public string $field;
+    public TransitionState $from;
+    public TransitionState $to;
+    private Model $model;
+    private bool $isTransitioned = false;
 
     public function __construct(Model $model, string $field, TransitionState $from, TransitionState $to)
     {

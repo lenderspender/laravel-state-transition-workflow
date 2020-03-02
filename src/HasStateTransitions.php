@@ -11,7 +11,7 @@ use ReflectionClass;
 trait HasStateTransitions
 {
     /** @var \LenderSpender\StateTransitionWorkflow\TransitionWorkflowConfig[] */
-    protected static $stateFields = [];
+    protected static array $stateFields = [];
 
     public static function bootHasStateTransitions(): void
     {

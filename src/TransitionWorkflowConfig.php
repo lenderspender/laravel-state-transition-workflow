@@ -9,11 +9,10 @@ namespace LenderSpender\StateTransitionWorkflow;
  */
 class TransitionWorkflowConfig
 {
-    /** @var string */
-    public $field;
+    public string $field;
 
     /** @var array<string, array<string, array>> */
-    private $allowedTransitions = [];
+    private array $allowedTransitions = [];
 
     public function __construct(string $field)
     {
