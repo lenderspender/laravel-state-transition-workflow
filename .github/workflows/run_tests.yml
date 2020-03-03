@@ -1,39 +1,45 @@
 name: Run tests
 
-on:
-  push:
+on: [push]
 
 jobs:
-  php-tests:
+  test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        php: [7.4]
+        laravel: [6.*, 7.*]
+        dependency-version: [prefer-lowest, prefer-stable]
+        include:
+          - laravel: 6.*
+            testbench: 4.*
+          - laravel: 7.*
+            testbench: 5.*
 
-    name: Running tests
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.dependency-version }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v1
 
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v1
+      - name: Cache dependencies
+        uses: actions/cache@v1
         with:
-          php-version: 7.4
-          extensions: curl, mbstring, pdo, bcmath
-          coverage: none
+          path: ~/.composer/cache/files
+          key: dependencies-laravel-${{ matrix.laravel }}-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
 
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - uses: actions/cache@v1
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
         with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-
+          php-version: ${{ matrix.php }}
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
+          coverage: none
 
       - name: Install dependencies
         run: |
-          composer install --no-interaction --prefer-dist --no-suggest
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
 
       - name: Execute tests
         run: ./vendor/bin/phpunit --printer mheap\\GithubActionsReporter\\Printer
