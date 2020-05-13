@@ -10,7 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-          uses: actions/checkout@v1
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.LS_BUILDER_PA_GITHUB_TOKEN }}
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v1
@@ -36,14 +38,7 @@ jobs:
 
       - name: Run cs-fixer
         run: |
-          endor/bin/php-cs-fixer fix
-
-      - uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.LS_BUILDER_PA_GITHUB_TOKEN }}
-
-      - name: Run php-cs-fixer
-        uses: docker://oskarstark/php-cs-fixer-ga:2.16.1.1
+          vendor/bin/php-cs-fixer fix
 
       - uses: stefanzweifel/git-auto-commit-action@v2.5.0
         with:
