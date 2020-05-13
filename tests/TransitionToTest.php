@@ -23,17 +23,7 @@ class TransitionToTest extends TestCase
         self::assertEquals(FooStates::SECOND(), $model->status);
     }
 
-    public function test_model_can_be_transitioned_to_one_of_the_tos(): void
-    {
-        $model = new TransitionableModel();
-        $model->status = FooStates::FIRST();
-
-        $model->transitionStateTo(FooStates::SECOND());
-
-        self::assertEquals(FooStates::SECOND(), $model->status);
-    }
-
-    public function test_model_can_be_transitioned_from_multiple(): void
+    public function test_model_can_be_transitioned_from_multiple_states(): void
     {
         $model1 = new TransitionableModel();
         $model1->status = FooStates::MULTIPLE1();
