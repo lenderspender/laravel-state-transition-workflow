@@ -5,16 +5,17 @@ on:
 
 jobs:
   php-static-analysis:
+    if: "!contains(github.event.head_commit.message, 'skipci')"
     runs-on: ubuntu-latest
 
     name: Running static analysis
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Setup PHP
-        uses: shivammathur/setup-php@v1
+        uses: shivammathur/setup-php@v2
         with:
           php-version: 7.4
           extensions: curl, mbstring, pdo, bcmath
