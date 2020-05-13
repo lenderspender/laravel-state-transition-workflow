@@ -11,8 +11,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-        with:
-          token: ${{ secrets.LS_BUILDER_PA_GITHUB_TOKEN }}
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -44,5 +42,3 @@ jobs:
         with:
           commit_message: Apply php-cs-fixer changes
           branch: ${{ github.head_ref }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.LS_BUILDER_PA_GITHUB_TOKEN }}
