@@ -21,16 +21,15 @@
     },
     "require": {
         "php": "^7.4.0",
-        "laravel/framework": "^6.0|^7.0",
-        "spatie/laravel-queueable-action": "^2.5"
+        "laravel/framework": "^6.0|^7.0|^8.0",
+        "spatie/laravel-queueable-action": "^2.6"
     },
     "require-dev": {
-        "lenderspender/laravel-enums": "^0.3.0",
+        "lenderspender/laravel-enums": "^1.0.3",
         "lenderspender/php-cs-fixer-rules": "dev-master",
-        "mheap/phpunit-github-actions-printer": "^1.2",
         "orchestra/testbench": "^4.0|^5.0",
-        "phpstan/phpstan": "^0.12.4",
-        "phpunit/phpunit": "^8.0"
+        "phpstan/phpstan": "^0.12.42",
+        "phpunit/phpunit": "^9.3"
     },
     "config": {
         "sort-packages": true
