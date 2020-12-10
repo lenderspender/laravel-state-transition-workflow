@@ -12,7 +12,8 @@ class Transition
     public string $field;
     public TransitionState $from;
     public TransitionState $to;
-    private Model $model;
+    public Model $model;
+
     private bool $isTransitioned = false;
 
     public function __construct(Model $model, string $field, TransitionState $from, TransitionState $to)
@@ -21,6 +22,11 @@ class Transition
         $this->field = $field;
         $this->from = $from;
         $this->to = $to;
+    }
+
+    public function __toString(): string
+    {
+        return self::getTransitionKey($this->from, $this->to);
     }
 
     public static function getTransitionKey(TransitionState $from, TransitionState $to): string
@@ -45,10 +51,5 @@ class Transition
     public function canBeTransitioned(): bool
     {
         return $this->model->{$this->field} == $this->from && ! $this->isTransitioned;
-    }
-
-    public function __toString(): string
-    {
-        return self::getTransitionKey($this->from, $this->to);
     }
 }
