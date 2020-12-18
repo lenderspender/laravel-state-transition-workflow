@@ -25,7 +25,7 @@
         "spatie/laravel-queueable-action": "^2.6"
     },
     "require-dev": {
-        "lenderspender/laravel-enums": "^1.0.3",
+        "lenderspender/laravel-enums": "^1.1.0",
         "lenderspender/php-cs-fixer-rules": "dev-master",
         "orchestra/testbench": "^4.0|^5.0",
         "phpstan/phpstan": "^0.12.42",
