@@ -58,6 +58,11 @@ trait HasStateTransitions
         }, $transitionWorkflowConfig->getAllowedTransitions($currentState)));
     }
 
+    public function canTransitionTo(TransitionState $state, ?string $field = null): bool
+    {
+        return in_array($state, $this->getAvailableStateTransitions($field));
+    }
+
     protected function addState(string $field): TransitionWorkflowConfig
     {
         $stateConfig = new TransitionWorkflowConfig($field);
