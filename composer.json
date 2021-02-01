@@ -22,7 +22,7 @@
     "require": {
         "php": "^7.4.0 | ^8.0",
         "laravel/framework": "^7.0 | ^8.0",
-        "spatie/laravel-queueable-action": "^2.6"
+        "spatie/laravel-queueable-action": "dev-master"
     },
     "require-dev": {
         "lenderspender/laravel-enums": "^1.1.0",
@@ -38,5 +38,11 @@
         "test": "vendor/bin/phpunit",
         "analyse": "vendor/bin/phpstan analyse",
         "fix": "vendor/bin/php-cs-fixer fix"
-    }
+    },
+    "repositories": [
+        {
+            "type":"vcs",
+            "url": "https://github.com/lenderspender/laravel-queueable-action"
+        }
+    ]
 }
