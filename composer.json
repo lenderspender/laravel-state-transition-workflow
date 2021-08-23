@@ -21,7 +21,7 @@
     },
     "require": {
         "php": "^7.4.0 | ^8.0",
-        "laravel/framework": "^8.40.0",
+        "laravel/framework": "^7.0 | ^8.40.0",
         "spatie/laravel-queueable-action": "^2.10"
     },
     "require-dev": {
