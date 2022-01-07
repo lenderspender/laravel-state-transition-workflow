@@ -11,7 +11,7 @@ class TransitionWorkflowConfig
 {
     public string $field;
 
-    /** @var array<string, array<string, array>> */
+    /** @var array<string, array<string, array<string, \LenderSpender\StateTransitionWorkflow\Workflow|\LenderSpender\StateTransitionWorkflow\TransitionState>>> */
     private array $allowedTransitions = [];
 
     public function __construct(string $field)
@@ -53,14 +53,16 @@ class TransitionWorkflowConfig
         $workflow = $this->getAllowedTransitions($transition->from)[(string) $transition->to]['workflow'] ?? null;
 
         if (is_string($workflow)) {
+            // @phpstan-ignore-next-line
             return app($workflow);
         }
 
+        // @phpstan-ignore-next-line
         return $workflow;
     }
 
     /**
-     * @return array<string, array>
+     * @return array<string, array<string, string|\LenderSpender\StateTransitionWorkflow\Workflow|\LenderSpender\StateTransitionWorkflow\TransitionState>> | array{}
      */
     public function getAllowedTransitions(TransitionState $from): array
     {

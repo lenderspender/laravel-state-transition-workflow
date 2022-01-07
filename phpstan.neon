@@ -3,4 +3,5 @@ parameters:
         - src
         - tests
     level: max
-    
+    ignoreErrors:
+        - '#Constant .*::.* is unused.#'

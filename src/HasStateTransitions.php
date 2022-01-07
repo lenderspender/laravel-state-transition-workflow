@@ -53,6 +53,7 @@ trait HasStateTransitions
 
         $currentState = $this->{$transitionWorkflowConfig->field};
 
+        // @phpstan-ignore-next-line
         return array_values(array_map(function (array $transitions) {
             return $transitions['to'];
         }, $transitionWorkflowConfig->getAllowedTransitions($currentState)));
