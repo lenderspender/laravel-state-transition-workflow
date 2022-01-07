@@ -17,7 +17,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 7.4
+          php-version: 8.1
           extensions: curl, mbstring, pdo, bcmath, intl
           coverage: none
 
@@ -34,7 +34,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer install --no-interaction --prefer-dist --no-suggest
+          composer install --no-interaction --prefer-dist
 
       - name: Run cs-fixer
         run: |
