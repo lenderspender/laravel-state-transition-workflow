@@ -22,7 +22,7 @@ class TransitionWorkflowConfig
     /**
      * @param \LenderSpender\StateTransitionWorkflow\TransitionState|iterable<\LenderSpender\StateTransitionWorkflow\TransitionState> $froms
      * @param \LenderSpender\StateTransitionWorkflow\TransitionState|iterable<\LenderSpender\StateTransitionWorkflow\TransitionState> $tos
-     * @param null|class-string<\LenderSpender\StateTransitionWorkflow\Workflow>                                                      $workflowClass
+     * @param class-string<\LenderSpender\StateTransitionWorkflow\Workflow>|null                                                      $workflowClass
      *
      * @return \LenderSpender\StateTransitionWorkflow\TransitionWorkflowConfig
      */
