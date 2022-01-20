@@ -3,4 +3,4 @@ phpunit.xml
 vendor/
 .phpunit.result.cache
 .DS_Store
-.php_cs.cache
+.php-cs-fixer.cache
