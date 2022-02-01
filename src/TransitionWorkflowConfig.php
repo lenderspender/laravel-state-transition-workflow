@@ -11,7 +11,7 @@ class TransitionWorkflowConfig
 {
     public string $field;
 
-    /** @var array<string, array<string, array<class-string<\LenderSpender\StateTransitionWorkflow\Workflow>|\LenderSpender\StateTransitionWorkflow\TransitionState|\LenderSpender\StateTransitionWorkflow\Workflow>>> **/
+    /** @var array<string, array<string, array<class-string<\LenderSpender\StateTransitionWorkflow\Workflow>|\LenderSpender\StateTransitionWorkflow\TransitionState|\LenderSpender\StateTransitionWorkflow\Workflow>>> * */
     private array $allowedTransitions = [];
 
     public function __construct(string $field)
