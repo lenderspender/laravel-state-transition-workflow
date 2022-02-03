@@ -11,7 +11,7 @@ class TransitionWorkflowConfig
 {
     public string $field;
 
-    /** @var array<string, array<string, array<string, \LenderSpender\StateTransitionWorkflow\Workflow|\LenderSpender\StateTransitionWorkflow\TransitionState>>> */
+    /** @var array<string, array<string, array<string, class-string<\LenderSpender\StateTransitionWorkflow\Workflow|\LenderSpender\StateTransitionWorkflow\TransitionState>>>> */
     private array $allowedTransitions = [];
 
     public function __construct(string $field)
@@ -36,8 +36,11 @@ class TransitionWorkflowConfig
             };
         }
 
+        //@phpstan-ignore-next-line
         collect($froms)->each(function (TransitionState $from) use ($tos, $workflowClass) {
+            //@phpstan-ignore-next-line
             collect($tos)->each(function (TransitionState $transition) use ($from, $workflowClass) {
+                //@phpstan-ignore-next-line
                 $this->allowedTransitions[(string) $from][(string) $transition] = [
                     'workflow' => $workflowClass,
                     'to' => $transition,
