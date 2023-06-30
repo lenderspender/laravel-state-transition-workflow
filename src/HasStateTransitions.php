@@ -47,7 +47,7 @@ trait HasStateTransitions
     /**
      * @return array<\LenderSpender\StateTransitionWorkflow\TransitionState>
      */
-    public function getAvailableStateTransitions(?string $field = null): array
+    public function getAvailableStateTransitions(string $field = null): array
     {
         $transitionWorkflowConfig = $this->getTransitionWorkflowConfig($field);
 
@@ -59,7 +59,7 @@ trait HasStateTransitions
         }, $transitionWorkflowConfig->getAllowedTransitions($currentState)));
     }
 
-    public function canTransitionTo(TransitionState $state, ?string $field = null): bool
+    public function canTransitionTo(TransitionState $state, string $field = null): bool
     {
         return in_array($state, $this->getAvailableStateTransitions($field));
     }

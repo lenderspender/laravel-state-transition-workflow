@@ -17,7 +17,7 @@ class TransitionableModel extends Model
     public bool $isTransitionedByCustomWorkflow = false;
     public int $timesTransitionedByQueuedWorkflow = 0;
 
-    /** @var string[]  */
+    /** @var string[] */
     protected $casts = [
         'status' => FooStates::class,
     ];

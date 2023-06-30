@@ -36,11 +36,11 @@ class TransitionWorkflowConfig
             };
         }
 
-        //@phpstan-ignore-next-line
+        // @phpstan-ignore-next-line
         collect($froms)->each(function (TransitionState $from) use ($tos, $workflowClass) {
-            //@phpstan-ignore-next-line
+            // @phpstan-ignore-next-line
             collect($tos)->each(function (TransitionState $transition) use ($from, $workflowClass) {
-                //@phpstan-ignore-next-line
+                // @phpstan-ignore-next-line
                 $this->allowedTransitions[$from->getValue()][$transition->getValue()] = [
                     'workflow' => $workflowClass,
                     'to' => $transition,
@@ -65,7 +65,7 @@ class TransitionWorkflowConfig
     }
 
     /**
-     * @return array<string, array<string, string|\LenderSpender\StateTransitionWorkflow\Workflow|\LenderSpender\StateTransitionWorkflow\TransitionState>> | array{}
+     * @return array<string, array<string, string|\LenderSpender\StateTransitionWorkflow\Workflow|\LenderSpender\StateTransitionWorkflow\TransitionState>>|array{}
      */
     public function getAllowedTransitions(TransitionState $from): array
     {
