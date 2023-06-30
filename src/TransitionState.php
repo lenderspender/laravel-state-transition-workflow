@@ -6,5 +6,5 @@ namespace LenderSpender\StateTransitionWorkflow;
 
 interface TransitionState
 {
-    public function __toString();
+    public function getValue(): string;
 }

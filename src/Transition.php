@@ -26,7 +26,7 @@ class Transition
 
     public static function getTransitionKey(TransitionState $from, TransitionState $to): string
     {
-        return "{$from}->{$to}";
+        return "{$from->getValue()}->{$to->getValue()}";
     }
 
     public function execute(): void
