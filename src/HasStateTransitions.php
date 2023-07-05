@@ -45,7 +45,7 @@ trait HasStateTransitions
     }
 
     /**
-     * @return array<\LenderSpender\StateTransitionWorkflow\TransitionState>
+     * @return array<int, \LenderSpender\StateTransitionWorkflow\TransitionState|\LenderSpender\StateTransitionWorkflow\Workflow|string>
      */
     public function getAvailableStateTransitions(string $field = null): array
     {
@@ -53,7 +53,6 @@ trait HasStateTransitions
 
         $currentState = $this->{$transitionWorkflowConfig->field};
 
-        // @phpstan-ignore-next-line
         return array_values(array_map(function (array $transitions) {
             return $transitions['to'];
         }, $transitionWorkflowConfig->getAllowedTransitions($currentState)));

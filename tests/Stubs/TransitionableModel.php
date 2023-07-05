@@ -17,7 +17,7 @@ class TransitionableModel extends Model
     public bool $isTransitionedByCustomWorkflow = false;
     public int $timesTransitionedByQueuedWorkflow = 0;
 
-    /** @var string[] */
+    /** @var array<string, class-string<\BackedEnum>> */
     protected $casts = [
         'status' => FooStates::class,
     ];
