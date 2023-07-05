@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LenderSpender\StateTransitionWorkflow\Tests\Stubs;
 
+use BackedEnum;
 use Illuminate\Database\Eloquent\Model;
 use LenderSpender\StateTransitionWorkflow\HasStateTransitions;
 
@@ -17,7 +18,7 @@ class TransitionableModel extends Model
     public bool $isTransitionedByCustomWorkflow = false;
     public int $timesTransitionedByQueuedWorkflow = 0;
 
-    /** @var array<string, class-string<\BackedEnum>> */
+    /** @var array<string, class-string<BackedEnum>> */
     protected $casts = [
         'status' => FooStates::class,
     ];
