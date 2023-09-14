@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace LenderSpender\StateTransitionWorkflow\Tests\Stubs;
 
+use BackedEnum;
 use Illuminate\Database\Eloquent\Model;
 use LenderSpender\StateTransitionWorkflow\HasStateTransitions;
 
@@ -17,8 +18,8 @@ class TransitionableModel extends Model
     public bool $isTransitionedByCustomWorkflow = false;
     public int $timesTransitionedByQueuedWorkflow = 0;
 
-    /** @var array<string, class-string<\LenderSpender\LaravelEnums\Enum>> */
-    protected $enums = [
+    /** @var array<string, class-string<BackedEnum>> */
+    protected $casts = [
         'status' => FooStates::class,
     ];
 
@@ -44,11 +45,11 @@ class TransitionableModel extends Model
     protected function registerStateTransitions(): void
     {
         $this->addState('status')
-            ->allowTransition(FooStates::FIRST(), FooStates::SECOND())
-            ->allowTransition(FooStates::SECOND(), [FooStates::FIRST(), FooStates::WITH_CUSTOM_WORKFLOW_CLASS()])
-            ->allowTransition([FooStates::MULTIPLE1(), FooStates::MULTIPLE2()], [FooStates::FIRST(), FooStates::SECOND()])
-            ->allowTransition(FooStates::FIRST(), FooStates::WITH_CUSTOM_WORKFLOW_CLASS(), CustomWorkflow::class)
-            ->allowTransition(FooStates::FIRST(), FooStates::WITH_CUSTOM_QUEUED_WORKFLOW_CLASS(), CustomQueuedWorkflow::class)
-            ->allowTransition(FooStates::FIRST(), FooStates::WITH_DENIED_WORKFLOW_CLASS(), DeniedWorkflow::class);
+            ->allowTransition(FooStates::FIRST, FooStates::SECOND)
+            ->allowTransition(FooStates::SECOND, [FooStates::FIRST, FooStates::WITH_CUSTOM_WORKFLOW_CLASS])
+            ->allowTransition([FooStates::MULTIPLE1, FooStates::MULTIPLE2], [FooStates::FIRST, FooStates::SECOND])
+            ->allowTransition(FooStates::FIRST, FooStates::WITH_CUSTOM_WORKFLOW_CLASS, CustomWorkflow::class)
+            ->allowTransition(FooStates::FIRST, FooStates::WITH_CUSTOM_QUEUED_WORKFLOW_CLASS, CustomQueuedWorkflow::class)
+            ->allowTransition(FooStates::FIRST, FooStates::WITH_DENIED_WORKFLOW_CLASS, DeniedWorkflow::class);
     }
 }

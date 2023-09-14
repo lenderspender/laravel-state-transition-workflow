@@ -45,21 +45,20 @@ trait HasStateTransitions
     }
 
     /**
-     * @return array<\LenderSpender\StateTransitionWorkflow\TransitionState>
+     * @return array<int, \LenderSpender\StateTransitionWorkflow\TransitionState|\LenderSpender\StateTransitionWorkflow\Workflow|string>
      */
-    public function getAvailableStateTransitions(?string $field = null): array
+    public function getAvailableStateTransitions(string $field = null): array
     {
         $transitionWorkflowConfig = $this->getTransitionWorkflowConfig($field);
 
         $currentState = $this->{$transitionWorkflowConfig->field};
 
-        // @phpstan-ignore-next-line
         return array_values(array_map(function (array $transitions) {
             return $transitions['to'];
         }, $transitionWorkflowConfig->getAllowedTransitions($currentState)));
     }
 
-    public function canTransitionTo(TransitionState $state, ?string $field = null): bool
+    public function canTransitionTo(TransitionState $state, string $field = null): bool
     {
         return in_array($state, $this->getAvailableStateTransitions($field));
     }
