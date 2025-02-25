@@ -11,7 +11,7 @@ use LenderSpender\StateTransitionWorkflow\Workflow;
 class CustomWorkflow extends Workflow
 {
     /**
-     * @param \LenderSpender\StateTransitionWorkflow\Tests\Stubs\TransitionableModel $model
+     * @param TransitionableModel $model
      */
     public function execute(Model $model, Transition $transition): void
     {

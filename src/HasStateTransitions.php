@@ -10,7 +10,7 @@ use ReflectionClass;
 
 trait HasStateTransitions
 {
-    /** @var \LenderSpender\StateTransitionWorkflow\TransitionWorkflowConfig[] */
+    /** @var TransitionWorkflowConfig[] */
     protected static array $stateFields = [];
 
     public static function bootHasStateTransitions(): void
@@ -45,7 +45,7 @@ trait HasStateTransitions
     }
 
     /**
-     * @return array<int, \LenderSpender\StateTransitionWorkflow\TransitionState|\LenderSpender\StateTransitionWorkflow\Workflow|string>
+     * @return array<int, TransitionState|Workflow|string>
      */
     public function getAvailableStateTransitions(?string $field = null): array
     {
