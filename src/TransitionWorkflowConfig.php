@@ -26,7 +26,7 @@ class TransitionWorkflowConfig
      *
      * @return \LenderSpender\StateTransitionWorkflow\TransitionWorkflowConfig
      */
-    public function allowTransition($froms, $tos, string $workflowClass = null): self
+    public function allowTransition($froms, $tos, ?string $workflowClass = null): self
     {
         $tos = is_iterable($tos) ? $tos : [$tos];
         $froms = is_iterable($froms) ? $froms : [$froms];
