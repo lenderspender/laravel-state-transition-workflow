@@ -11,7 +11,7 @@ class TransitionWorkflowConfig
 {
     public string $field;
 
-    /** @var array<string, array<string, array<string, class-string<\LenderSpender\StateTransitionWorkflow\Workflow|\LenderSpender\StateTransitionWorkflow\TransitionState>>>> */
+    /** @var array<string, array<string, array<string, class-string<Workflow|TransitionState>>>> */
     private array $allowedTransitions = [];
 
     public function __construct(string $field)
@@ -20,19 +20,17 @@ class TransitionWorkflowConfig
     }
 
     /**
-     * @param \LenderSpender\StateTransitionWorkflow\TransitionState|iterable<\LenderSpender\StateTransitionWorkflow\TransitionState> $froms
-     * @param \LenderSpender\StateTransitionWorkflow\TransitionState|iterable<\LenderSpender\StateTransitionWorkflow\TransitionState> $tos
-     * @param class-string<\LenderSpender\StateTransitionWorkflow\Workflow>|null                                                      $workflowClass
-     *
-     * @return \LenderSpender\StateTransitionWorkflow\TransitionWorkflowConfig
+     * @param TransitionState|iterable<TransitionState> $froms
+     * @param TransitionState|iterable<TransitionState> $tos
+     * @param class-string<Workflow>|null               $workflowClass
      */
-    public function allowTransition($froms, $tos, string $workflowClass = null): self
+    public function allowTransition($froms, $tos, ?string $workflowClass = null): self
     {
         $tos = is_iterable($tos) ? $tos : [$tos];
         $froms = is_iterable($froms) ? $froms : [$froms];
 
         if (! $workflowClass) {
-            $workflowClass = new class() extends Workflow {
+            $workflowClass = new class extends Workflow {
             };
         }
 
@@ -65,7 +63,7 @@ class TransitionWorkflowConfig
     }
 
     /**
-     * @return array<string, array<string, string|\LenderSpender\StateTransitionWorkflow\Workflow|\LenderSpender\StateTransitionWorkflow\TransitionState>>|array{}
+     * @return array<string, array<string, string|Workflow|TransitionState>>|array{}
      */
     public function getAllowedTransitions(TransitionState $from): array
     {

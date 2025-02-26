@@ -12,7 +12,7 @@ use LenderSpender\StateTransitionWorkflow\Workflow;
 class CustomQueuedWorkflow extends Workflow implements ShouldQueue
 {
     /**
-     * @param \LenderSpender\StateTransitionWorkflow\Tests\Stubs\TransitionableModel $model
+     * @param TransitionableModel $model
      */
     public function execute(Model $model, Transition $transition): void
     {

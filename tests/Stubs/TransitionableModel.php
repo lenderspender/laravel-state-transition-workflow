@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use LenderSpender\StateTransitionWorkflow\HasStateTransitions;
 
 /**
- * @property \LenderSpender\StateTransitionWorkflow\Tests\Stubs\FooStates $status
+ * @property FooStates $status
  */
 class TransitionableModel extends Model
 {
