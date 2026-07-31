@@ -2,6 +2,9 @@ name: Run tests
 
 on: [push]
 
+permissions:
+  contents: read
+
 jobs:
   test:
     if: "!contains(github.event.head_commit.message, 'skipci')"
@@ -17,6 +20,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v7
+        with:
+          persist-credentials: false
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
