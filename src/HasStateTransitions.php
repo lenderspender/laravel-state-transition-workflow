@@ -5,18 +5,28 @@ declare(strict_types=1);
 namespace LenderSpender\StateTransitionWorkflow;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\Eloquent\Attributes\Boot;
 use LenderSpender\StateTransitionWorkflow\Exceptions\TransitionNotAllowedException;
-use ReflectionClass;
+use UnexpectedValueException;
 
 trait HasStateTransitions
 {
     /** @var TransitionWorkflowConfig[] */
     protected static array $stateFields = [];
 
+    #[Boot]
     public static function bootHasStateTransitions(): void
     {
-        $class = (new ReflectionClass(static::class))->newInstanceWithoutConstructor();
-        $class->registerStateTransitions();
+        static::registerStateTransitions();
+    }
+
+    protected static function addState(string $field): TransitionWorkflowConfig
+    {
+        $stateConfig = new TransitionWorkflowConfig($field);
+
+        static::$stateFields[$field] = $stateConfig;
+
+        return $stateConfig;
     }
 
     public function transitionStateTo(TransitionState $to, ?string $field = null): self
@@ -24,7 +34,7 @@ trait HasStateTransitions
         $transitionWorkflowConfig = $this->getTransitionWorkflowConfig($field);
 
         $field = $transitionWorkflowConfig->field;
-        $transition = new Transition($this, $field, $this->{$field}, $to);
+        $transition = new Transition($this, $field, $this->getState($field), $to);
         $workflow = $transitionWorkflowConfig->getWorkflow($transition);
 
         if (! $workflow || ! $workflow->isAllowed($transition)) {
@@ -51,7 +61,7 @@ trait HasStateTransitions
     {
         $transitionWorkflowConfig = $this->getTransitionWorkflowConfig($field);
 
-        $currentState = $this->{$transitionWorkflowConfig->field};
+        $currentState = $this->getState($transitionWorkflowConfig->field);
 
         return array_values(array_map(function (array $transitions) {
             return $transitions['to'];
@@ -63,19 +73,25 @@ trait HasStateTransitions
         return in_array($state, $this->getAvailableStateTransitions($field));
     }
 
-    protected function addState(string $field): TransitionWorkflowConfig
-    {
-        $stateConfig = new TransitionWorkflowConfig($field);
-
-        static::$stateFields[$field] = $stateConfig;
-
-        return $stateConfig;
-    }
-
-    abstract protected function registerStateTransitions(): void;
+    abstract protected static function registerStateTransitions(): void;
 
     private function getTransitionWorkflowConfig(?string $field): TransitionWorkflowConfig
     {
-        return static::$stateFields[$field] ?? array_values(static::$stateFields)[0];
+        if ($field !== null && isset(static::$stateFields[$field])) {
+            return static::$stateFields[$field];
+        }
+
+        return array_values(static::$stateFields)[0];
+    }
+
+    private function getState(string $field): TransitionState
+    {
+        $state = $this->{$field};
+
+        if (! $state instanceof TransitionState) {
+            throw new UnexpectedValueException(sprintf('State field [%s] on [%s] must hold a %s, %s given.', $field, static::class, TransitionState::class, get_debug_type($state)));
+        }
+
+        return $state;
     }
 }

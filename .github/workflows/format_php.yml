@@ -10,25 +10,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.head_ref }}
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.2
+          php-version: 8.3
           extensions: curl, mbstring, pdo, bcmath, intl
           coverage: none
 
       - name: Get Composer Cache Directory
         id: composer-cache
         run: |
-          echo "::set-output name=dir::$(composer config cache-files-dir)"
-      - uses: actions/cache@v1
+          echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+      - uses: actions/cache@v6
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: |
             ${{ runner.os }}-composer-
 
@@ -40,7 +40,7 @@ jobs:
         run: |
           PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix
 
-      - uses: stefanzweifel/git-auto-commit-action@v4.2.0
+      - uses: stefanzweifel/git-auto-commit-action@v7.2.0
         with:
           commit_message: Apply php-cs-fixer changes (skipci)
           branch: ${{ github.head_ref }}
