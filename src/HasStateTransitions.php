@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Attributes\Boot;
 use LenderSpender\StateTransitionWorkflow\Exceptions\TransitionNotAllowedException;
 use UnexpectedValueException;
+use function PHPUnit\Framework\assertInstanceOf;
 
 trait HasStateTransitions
 {
@@ -88,9 +89,10 @@ trait HasStateTransitions
     {
         $state = $this->{$field};
 
-        if (! $state instanceof TransitionState) {
-            throw new UnexpectedValueException(sprintf('State field [%s] on [%s] must hold a %s, %s given.', $field, static::class, TransitionState::class, get_debug_type($state)));
-        }
+        assertInstanceOf(
+            TransitionState::class, $state,
+            sprintf('State field [%s] on [%s] must hold a %s, %s given.', $field, static::class, TransitionState::class, get_debug_type($state))
+        );
 
         return $state;
     }
