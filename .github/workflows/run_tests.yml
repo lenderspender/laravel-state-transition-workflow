@@ -10,12 +10,7 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'skipci')"
     runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: false
-      matrix:
-        php: ['8.3', '8.4', '8.5']
-
-    name: Run tests (PHP ${{ matrix.php }})
+    name: Run tests
 
     steps:
       - name: Checkout code
@@ -26,7 +21,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php }}
+          php-version: 8.5
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
           coverage: none
 

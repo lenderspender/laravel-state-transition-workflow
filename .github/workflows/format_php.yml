@@ -17,7 +17,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.3
+          php-version: 8.5
           extensions: curl, mbstring, pdo, bcmath, intl
           coverage: none
 
@@ -38,7 +38,7 @@ jobs:
 
       - name: Run cs-fixer
         run: |
-          PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix
+          vendor/bin/php-cs-fixer fix
 
       - uses: stefanzweifel/git-auto-commit-action@v7.2.0
         with:
