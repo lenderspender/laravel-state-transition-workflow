@@ -7,8 +7,6 @@ namespace LenderSpender\StateTransitionWorkflow;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Attributes\Boot;
 use LenderSpender\StateTransitionWorkflow\Exceptions\TransitionNotAllowedException;
-use UnexpectedValueException;
-use function PHPUnit\Framework\assertInstanceOf;
 
 trait HasStateTransitions
 {
