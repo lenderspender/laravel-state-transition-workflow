@@ -89,8 +89,8 @@ trait HasStateTransitions
     {
         $state = $this->{$field};
 
-        assertInstanceOf(
-            TransitionState::class, $state,
+        assert(
+            TransitionState::class instanceof $state,
             sprintf('State field [%s] on [%s] must hold a %s, %s given.', $field, static::class, TransitionState::class, get_debug_type($state))
         );
 
