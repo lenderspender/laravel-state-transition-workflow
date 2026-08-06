@@ -15,17 +15,17 @@ The transaction model would look like:
 use LenderSpender\StateTransitionWorkflow\HasStateTransitions;
 
 /**
- * @property \App\Enums\TransactionState $state
+ * @property \App\Enums\TransactionState $status
  */
 class Transaction extends Model
 {
     use HasStateTransitions;
 
-    protected function registerStateTransitions(): void
+    protected static function registerStateTransitions(): void
     {
-        $this->addState('status')
-            ->allowTransition(TransactionState::CREATED(), TransactionState::SUCCESS(), TransactionSuccessfullWorkflow::class)
-            ->allowTransition(TransactionState::CREATED(), TransactionState::FAILED());
+        static::addState('status')
+            ->allowTransition(TransactionState::CREATED, TransactionState::SUCCESS, TransactionSuccessfullWorkflow::class)
+            ->allowTransition(TransactionState::CREATED, TransactionState::FAILED);
     }
 }
 ```
@@ -33,19 +33,18 @@ class Transaction extends Model
 Here is what the TransactionState enum looks like:
 
 ```php
-use LenderSpender\LaravelEnums\Enum;
 use LenderSpender\StateTransitionWorkflow\TransitionState;
 
-/**
- * @method static self CREATED()
- * @method static self SUCCESS()
- * @method static self FAILED()
- */
-class FooStates extends Enum implements TransitionState
+enum TransactionState: string implements TransitionState
 {
-    private const CREATED = 'created';
-    private const SUCCESS = 'success';
-    private const FAILED = 'failed';
+    case CREATED = 'created';
+    case SUCCESS = 'success';
+    case FAILED = 'failed';
+
+    public function getValue(): string
+    {
+        return $this->value;
+    }
 }
 ```
 
@@ -77,9 +76,9 @@ And here is how you use it:
 
 ```php
 $transaction = Transaction::find(1337);
-$transaction->transitionStateTo(FooStates::SUCCESS());
+$transaction->transitionStateTo(TransactionState::SUCCESS);
 
-$transaction->state == FooStates::SUCCESS; // true
+$transaction->status === TransactionState::SUCCESS; // true
 ```
 
 
@@ -91,6 +90,29 @@ You can install the package via composer:
 ```bash
 composer require lenderspender/laravel-state-transition-workflow
 ```
+
+## Upgrading to 5.0
+
+Transitions are now registered statically, so the reflection-based instantiation that used to happen during Laravel's model boot cycle is gone. Two mechanical changes are needed in every model using the trait:
+
+```php
+// 4.x
+protected function registerStateTransitions(): void
+{
+    $this->addState('status')
+        ->allowTransition(State::CREATED, State::SUCCESS);
+}
+
+// 5.x
+protected static function registerStateTransitions(): void
+{
+    static::addState('status')
+        ->allowTransition(State::CREATED, State::SUCCESS);
+}
+```
+
+1. Add `static` to `registerStateTransitions()`.
+2. Replace `$this->addState(...)` with `static::addState(...)`.
 
 ## Usage
 
@@ -107,15 +129,15 @@ use Illuminate\Database\Eloquent\Model;
 use LenderSpender\StateTransitionWorkflow\HasStateTransitions;
 
 /**
- * @property \App\Enums\TransactionState $state
+ * @property \App\Enums\TransactionState $status
  */
 class Transaction extends Model
 {
     use HasStateTransitions;
 
-    protected function registerStateTransitions(): void
+    protected static function registerStateTransitions(): void
     {
-        $this->addState('status');
+        static::addState('status');
     }
 }
 ```
@@ -126,22 +148,22 @@ Transitions are used to transition the state field for a model from one to anoth
 You need to specify which transitions are allowed and what workflow should be started on transition.
 By default all transitions are not allowed, to allow transitions you should call `allowTransition` on the added state.
 
-Single transition from `State::FROM()` to `State::TO()`
+Single transition from `State::FROM` to `State::TO`
 
 ```php
 class Transaction extends Model
 {
     use HasStateTransitions;
 
-    protected function registerStateTransitions(): void
+    protected static function registerStateTransitions(): void
     {
-        $this->addState('status')
-            ->allowTransitions(State::FROM(), State::TO());
+        static::addState('status')
+            ->allowTransition(State::FROM, State::TO);
     }
 }
 ```
 
-Allow transitions from `State::CREATED()` to `State::FAILED()` and `State::SUCCESS()`
+Allow transitions from `State::CREATED` to `State::FAILED` and `State::SUCCESS`
 
 ```php
 use Illuminate\Database\Eloquent\Model;
@@ -151,15 +173,15 @@ class Transaction extends Model
 {
     use HasStateTransitions;
 
-    protected function registerStateTransitions(): void
+    protected static function registerStateTransitions(): void
     {
-        $this->addState('status')
-            ->allowTransitions(State::CREATED(), [State::FAILED(), State::SUCCESS());
+        static::addState('status')
+            ->allowTransition(State::CREATED, [State::FAILED, State::SUCCESS]);
     }
 }        
 ```
 
-Allow transitions from `State::CREATED()` and `State::UPDATED()` to `State::FAILED()` and `State::SUCCESS()`
+Allow transitions from `State::CREATED` and `State::UPDATED` to `State::FAILED` and `State::SUCCESS`
 
 ```php
 use LenderSpender\StateTransitionWorkflow\HasStateTransitions;
@@ -168,10 +190,10 @@ class Transaction extends Model
 {
     use HasStateTransitions;
 
-    protected function registerStateTransitions(): void
+    protected static function registerStateTransitions(): void
     {
-        $this->addState('status')
-            ->allowTransitions([State::CREATED(), State::UPDATED()], [State::FAILED(), State::SUCCESS()]);
+        static::addState('status')
+            ->allowTransition([State::CREATED, State::UPDATED], [State::FAILED, State::SUCCESS]);
     }
 }
 ```
@@ -181,13 +203,13 @@ class Transaction extends Model
 Transitions can be used by calling the `transitionStateTo` method on the model.
 
 ```php
-$transaction->transitionStateTo(State::SUCCESS());
+$transaction->transitionStateTo(State::SUCCESS);
 ```
 
 By default the method uses the first registered state. When you've added multiple state fields you should specify which field to use.
 
 ```php
-$transaction->transitionStateTo(State::SUCCESS(), 'status');
+$transaction->transitionStateTo(State::SUCCESS, 'status');
 ```
 
 When a state transitions is not allowed a `LenderSpender\StateTransitionWorkflow\Exceptions\TransitionNotAllowedException` is thrown.
@@ -290,10 +312,10 @@ class Transaction extends Model
 {
     use HasStateTransitions;
 
-    protected function registerStateTransitions(): void
+    protected static function registerStateTransitions(): void
     {
-        $this->addState('status')
-            ->allowTransitions(State::CREATED(), State::SUCCESS(), PaidWorkflow::class);
+        static::addState('status')
+            ->allowTransition(State::CREATED, State::SUCCESS, PaidWorkflow::class);
     }
 }
 ```

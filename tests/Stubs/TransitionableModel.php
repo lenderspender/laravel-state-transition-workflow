@@ -23,6 +23,17 @@ class TransitionableModel extends Model
         'status' => FooStates::class,
     ];
 
+    protected static function registerStateTransitions(): void
+    {
+        static::addState('status')
+            ->allowTransition(FooStates::FIRST, FooStates::SECOND)
+            ->allowTransition(FooStates::SECOND, [FooStates::FIRST, FooStates::WITH_CUSTOM_WORKFLOW_CLASS])
+            ->allowTransition([FooStates::MULTIPLE1, FooStates::MULTIPLE2], [FooStates::FIRST, FooStates::SECOND])
+            ->allowTransition(FooStates::FIRST, FooStates::WITH_CUSTOM_WORKFLOW_CLASS, CustomWorkflow::class)
+            ->allowTransition(FooStates::FIRST, FooStates::WITH_CUSTOM_QUEUED_WORKFLOW_CLASS, CustomQueuedWorkflow::class)
+            ->allowTransition(FooStates::FIRST, FooStates::WITH_DENIED_WORKFLOW_CLASS, DeniedWorkflow::class);
+    }
+
     /**
      * @param array<string, mixed> $attributes
      * @param array<string, mixed> $options
@@ -40,16 +51,5 @@ class TransitionableModel extends Model
     public function save(array $options = []): bool
     {
         return true;
-    }
-
-    protected function registerStateTransitions(): void
-    {
-        $this->addState('status')
-            ->allowTransition(FooStates::FIRST, FooStates::SECOND)
-            ->allowTransition(FooStates::SECOND, [FooStates::FIRST, FooStates::WITH_CUSTOM_WORKFLOW_CLASS])
-            ->allowTransition([FooStates::MULTIPLE1, FooStates::MULTIPLE2], [FooStates::FIRST, FooStates::SECOND])
-            ->allowTransition(FooStates::FIRST, FooStates::WITH_CUSTOM_WORKFLOW_CLASS, CustomWorkflow::class)
-            ->allowTransition(FooStates::FIRST, FooStates::WITH_CUSTOM_QUEUED_WORKFLOW_CLASS, CustomQueuedWorkflow::class)
-            ->allowTransition(FooStates::FIRST, FooStates::WITH_DENIED_WORKFLOW_CLASS, DeniedWorkflow::class);
     }
 }
